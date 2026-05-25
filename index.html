@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NK 클리닉 메뉴얼</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; background: #f8f8f8; color: #222; font-size: 14px; line-height: 1.6; }
+
+/* 헤더 */
+.header { background: #fff; border-bottom: 1px solid #eee; padding: 24px 28px 20px; }
+.header .tag { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #999; text-transform: uppercase; margin-bottom: 6px; }
+.header h1 { font-size: 22px; font-weight: 800; color: #111; letter-spacing: -0.5px; }
+.header p { font-size: 12px; color: #aaa; margin-top: 4px; }
+
+/* 탭 네비 */
+.nav { display: flex; gap: 0; background: #fff; border-bottom: 1px solid #eee; padding: 0 20px; overflow-x: auto; }
+.nav::-webkit-scrollbar { display: none; }
+.nb { flex-shrink: 0; padding: 13px 16px; font-size: 13px; font-weight: 600; color: #bbb; cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.18s; }
+.nb.on { color: #111; border-bottom-color: #111; }
+.nb:hover:not(.on) { color: #666; }
+
+/* 페이지 */
+.pg { display: none; padding: 28px; max-width: 640px; }
+.pg.on { display: block; }
+
+/* 섹션 타이틀 */
+.sec-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #999; text-transform: uppercase; margin-bottom: 6px; }
+.sec-title { font-size: 18px; font-weight: 800; color: #111; margin-bottom: 4px; letter-spacing: -0.3px; }
+.sec-sub { font-size: 12px; color: #aaa; margin-bottom: 24px; }
+
+/* 블록 */
+.block { margin-bottom: 24px; }
+.block-title { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; color: #666; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 7px; }
+.block-title span.dot { width: 6px; height: 6px; border-radius: 50%; background: #111; display: inline-block; flex-shrink: 0; }
+
+/* 아이템 */
+.item { display: flex; gap: 14px; padding: 14px 16px; border-bottom: 1px solid #f0f0f0; align-items: flex-start; }
+.item:last-child { border-bottom: none; }
+.item-bar { width: 3px; border-radius: 2px; background: #e8e8e8; align-self: stretch; flex-shrink: 0; min-height: 24px; }
+.item-bar.hi { background: #111; }
+.item-bar.warn { background: #e74c3c; }
+.item-num { font-size: 20px; font-weight: 800; color: #111; line-height: 1; flex-shrink: 0; min-width: 30px; }
+.item-num.hi { color: #111; }
+.item-body { flex: 1; }
+.item-title { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 3px; }
+.item-sub { font-size: 12px; color: #666; line-height: 1.6; }
+.item-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; margin-top: 5px; letter-spacing: 0.03em; }
+.item-tag.black { background: #111; color: #fff; }
+.item-tag.red { background: #fdecea; color: #e74c3c; }
+
+/* 시스템 카드 */
+.sys-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; margin-bottom: 14px; overflow: hidden; }
+.sys-card-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; background: #111; }
+.sys-card-head .sys-name { font-size: 13px; font-weight: 700; color: #fff; }
+.sys-card-head .sys-cred { font-size: 11px; color: rgba(255,255,255,0.55); font-family: monospace; }
+.sys-card-body { padding: 0; }
+.sys-step { display: flex; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #f2f2f2; align-items: flex-start; font-size: 12px; color: #333; line-height: 1.65; }
+.sys-step:last-child { border-bottom: none; }
+.sys-step-num { font-size: 11px; font-weight: 800; color: #fff; background: #333; border-radius: 4px; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.sys-note { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 10px 14px; font-size: 11px; color: #78350f; line-height: 1.65; margin: 0 0 1px; }
+.cred-row { display: flex; gap: 8px; padding: 12px 16px; border-bottom: 1px solid #f2f2f2; }
+.cred-box { background: #f8f8f8; border-radius: 6px; padding: 8px 12px; font-size: 11px; flex: 1; }
+.cred-box .cl { font-size: 10px; color: #999; margin-bottom: 3px; font-weight: 700; letter-spacing: 0.05em; }
+.cred-box .cv { font-size: 13px; font-weight: 800; color: #111; font-family: monospace; }
+
+/* 테스트 카드 */
+.test-card { border-radius: 10px; margin-bottom: 20px; overflow: hidden; border: 1px solid #e8e8e8; }
+.test-card-head { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+.test-card-head .t-name { font-size: 15px; font-weight: 800; color: #fff; }
+.test-card-head .t-time { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 600; }
+.test-card-head .t-cut { font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.2); color: #fff; padding: 3px 9px; border-radius: 20px; }
+.test-card-body { background: #fff; padding: 14px 16px; }
+.t-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f2f2f2; align-items: flex-start; font-size: 12px; color: #333; line-height: 1.65; }
+.t-item:last-child { border-bottom: none; }
+.t-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.t-item strong { font-weight: 700; color: #111; }
+.t-warn { font-size: 11px; font-weight: 700; color: #e74c3c; margin-top: 3px; }
+.t-note { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 9px 13px; font-size: 11px; color: #78350f; line-height: 1.65; margin: 10px 0 2px; border-radius: 0 6px 6px 0; }
+
+/* 체크리스트 */
+.cl-item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 4px; border-bottom: 1px solid #f2f2f2; cursor: pointer; font-size: 13px; color: #333; line-height: 1.6; transition: background 0.15s; border-radius: 6px; }
+.cl-item:last-child { border-bottom: none; }
+.cl-item:hover { background: #f8f8f8; }
+.cl-item.done { color: #bbb; text-decoration: line-through; }
+.cl-item input[type=checkbox] { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; accent-color: #111; cursor: pointer; }
+.cl-item strong { font-weight: 700; color: #111; }
+.cl-item.done strong { color: #bbb; }
+
+/* 푸터 */
+.footer { text-align: center; padding: 24px; font-size: 11px; color: #ccc; border-top: 1px solid #eee; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="tag">NK Clinic</div>
+  <h1>클리닉 메뉴얼</h1>
+  <p>2026 개정판 · 학습관리팀</p>
+</div>
+
+<div class="nav">
+  <button class="nb on" onclick="sw('m1',0)">근무 수칙</button>
+  <button class="nb" onclick="sw('m2',1)">근무 방법</button>
+  <button class="nb" onclick="sw('m3',2)">테스트 지침</button>
+  <button class="nb" onclick="sw('m4',3)">상벌점제</button>
+  <button class="nb" onclick="sw('m5',4)">행정 보고</button>
+  <button class="nb" onclick="sw('m6',5)">체크리스트</button>
+</div>
+
+<!-- 근무 수칙 -->
+<div class="pg on" id="m1">
+  <div class="sec-label">Work Rules</div>
+  <div class="sec-title">핵심 근무 수칙</div>
+  <div class="sec-sub">클리닉 선생님이 반드시 준수해야 할 기본 수칙입니다.</div>
+
+  <!-- 근무 태도 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 근무 태도</div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">01</div>
+      <div class="item-body">
+        <div class="item-title">지속적 라운딩</div>
+        <div class="item-sub">한 자리에 앉아있거나 서 있지 말고 지속적으로 라운딩하며 학생들을 살핍니다.</div>
+        <span class="item-tag black">★ 최우선</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">02</div>
+      <div class="item-body">
+        <div class="item-title">핸드폰·수면 학생 대응</div>
+        <div class="item-sub">핸드폰을 보거나 조는 학생은 즉시 깨우고 팀장에게 보고합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">03</div>
+      <div class="item-body">
+        <div class="item-title">잡담·소란 즉시 제지</div>
+        <div class="item-sub">학생 간 잡담·소란 발생 시 동조하지 말고 즉시 제지합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">04</div>
+      <div class="item-body">
+        <div class="item-title">선생님 핸드폰 사용 금지</div>
+        <div class="item-sub">클리닉 선생님은 특별한 업무 외에 핸드폰 사용 절대 금지합니다.</div>
+        <span class="item-tag red">금지</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar"></div>
+      <div class="item-num">05</div>
+      <div class="item-body">
+        <div class="item-title">문제 학생 보고</div>
+        <div class="item-sub">주의를 준 후 즉시 팀장 / 부장 / 대표에게 전화 보고합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar"></div>
+      <div class="item-num">06</div>
+      <div class="item-body">
+        <div class="item-title">혼자 있는 학생 확인</div>
+        <div class="item-sub">복도나 카운터에 혼자 있는 학생에게 먼저 다가가 신입생인지, 도움이 필요한지 확인합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar"></div>
+      <div class="item-num">07</div>
+      <div class="item-body">
+        <div class="item-title">화장실 장시간 체크</div>
+        <div class="item-sub">화장실에 장시간 간 학생은 시간을 체크하고 확인합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar"></div>
+      <div class="item-num">08</div>
+      <div class="item-body">
+        <div class="item-title">단계적 힌트 제공</div>
+        <div class="item-sub">질문하는 학생에게 바로 정답을 알려주지 말고 단계적으로 힌트를 제공합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핸드폰 관리 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 핸드폰 관리</div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">01</div>
+      <div class="item-body">
+        <div class="item-title">이어폰 착용 제지</div>
+        <div class="item-sub">강의 영상 시청 외에 이어폰을 끼고 있는 학생은 즉시 빼라고 지도합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">02</div>
+      <div class="item-body">
+        <div class="item-title">채팅 학생 압수 조치</div>
+        <div class="item-sub">설문 작성 외에 채팅하는 것 같은 학생 발견 시 압수 조치합니다.</div>
+        <span class="item-tag red">압수</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">03</div>
+      <div class="item-body">
+        <div class="item-title">외출 시 핸드폰 보관</div>
+        <div class="item-sub">화장실이나 물 마시러 가는 학생은 핸드폰을 책상에 두고 다녀올 수 있도록 안내합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar"></div>
+      <div class="item-num">04</div>
+      <div class="item-body">
+        <div class="item-title">핸드폰 거치 안내</div>
+        <div class="item-sub">클리닉 시작 즉시 핸드폰 사용 중인 학생에게 책상 위 오른쪽에 뒤집어 두라고 안내합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar warn"></div>
+      <div class="item-num">05</div>
+      <div class="item-body">
+        <div class="item-title">불응 시 즉시 팀장 보고</div>
+        <div class="item-sub">압수 경고 후 불응 시 즉시 팀장에게 보고하고, 압수한 휴대폰은 바로 팀장에게 전달합니다.</div>
+        <span class="item-tag red">즉시 보고</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 근무 방법 -->
+<div class="pg" id="m2">
+  <div class="sec-label">How to Work</div>
+  <div class="sec-title">근무 방법</div>
+  <div class="sec-sub">신입 선생님이 알아야 할 클리닉 진행 순서와 시스템 사용법입니다.</div>
+
+  <!-- 클리닉 진행 순서 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 클리닉 진행 순서</div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">01</div>
+      <div class="item-body">
+        <div class="item-title">출결 처리</div>
+        <div class="item-sub">출퇴근 시 카운터에 번호 입력해서 출결합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">02</div>
+      <div class="item-body">
+        <div class="item-title">핸드폰 내려놓기 + 출석 체크</div>
+        <div class="item-sub">클리닉 시작 시 휴대폰 내려놓으라고 안내한 후, 시트지에서 학생 <strong>출석 체크</strong>를 진행합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">03</div>
+      <div class="item-body">
+        <div class="item-title">반·좌석 확인 후 시험지 배부</div>
+        <div class="item-sub">출석 체크 후 학생 반과 좌석을 확인하고 시험지를 나눠줍니다. 시작 전 시험지는 뒤집어 둡니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">04</div>
+      <div class="item-body">
+        <div class="item-title">시험 시작</div>
+        <div class="item-sub">종 친 후 5분 뒤 시험 시작합니다. (예: 1교시 → 5:35 시작)</div>
+        <span class="item-tag black">일일 20분</span>&nbsp;<span class="item-tag black">주간 40분</span>&nbsp;<span class="item-tag black">월말 50분</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">05</div>
+      <div class="item-body">
+        <div class="item-title">시험 중 라운딩</div>
+        <div class="item-sub">시험 진행 중 <strong>라운딩</strong>하며 졸거나 멍 때리는 학생에게 주의를 줍니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">06</div>
+      <div class="item-body">
+        <div class="item-title">시험 종료 후 채점 확인</div>
+        <div class="item-sub">시험 종료 공지 후 학생이 채점하는 것을 확인합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">07</div>
+      <div class="item-body">
+        <div class="item-title">오답노트 검사 + 오답유형 진행</div>
+        <div class="item-sub">오답노트를 <strong>검사</strong>한 후 오답유형을 진행합니다. 대충 쓴 것은 다시 시킵니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">08</div>
+      <div class="item-body">
+        <div class="item-title">오답유형 중 라운딩 + 폰 압수</div>
+        <div class="item-sub">오답유형 진행 중 <strong>라운딩</strong>하며 폰으로 딴짓하는 학생 핸드폰을 압수합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">09</div>
+      <div class="item-body">
+        <div class="item-title">마무리 — 설문지 + 챌린지</div>
+        <div class="item-sub">시험 마무리 시 학생들에게 <strong>설문지</strong> 작성을 언급하고 <strong>챌린지</strong>를 시킵니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">10</div>
+      <div class="item-body">
+        <div class="item-title">종료 5분 전 설문지 재공지</div>
+        <div class="item-sub">클리닉 종료 5분 전 <strong>설문지</strong> 작성을 한 번 더 언급합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 시스템 사용법 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 시스템 사용법</div>
+
+    <!-- 매쓰플랫 -->
+    <div class="sys-card">
+      <div class="sys-card-head">
+        <span class="sys-name">📐 매쓰플랫</span>
+        <span class="sys-cred">ID 03180141020 · PW asdf1234</span>
+      </div>
+      <div class="sys-card-body">
+        <div class="sys-step"><div class="sys-step-num">1</div><div>시험지 출제: 수업준비 → 시험지 검색 → 시험지 출제 → 학생이름 선택</div></div>
+        <div class="sys-step"><div class="sys-step-num">2</div><div>오답유형 제작: 수업 → 학생 이름 검색 → 시험지 점수 칸 선택 → 오답학습지 만들기 → 가운데 버튼(틀린문제의 쌍둥이) → 제작</div></div>
+        <div class="sys-note">오답유형 기준 — 5문제 이하에서 1문제 오답 시 전체 재진행 / 6문제 이상부터 틀린 문제만 재진행<br>예) 3문제 중 1개 오답 → 3문제 전체 / 5문제 중 1개 → 1문제만 / 5문제 중 2개 → 5문제 전체</div>
+        <div class="sys-step" style="margin-top:8px"><div class="sys-step-num">3</div><div>강의 영상 안 보이는 학생: 관리 → 학생앱 설정 → 풀이영상 공개 설정 → 학년·학생 선택 → 채점 후 체크</div></div>
+        <div class="sys-step"><div class="sys-step-num">4</div><div>챌린지 문제: 수업 → 학생 이름 검색 → 유형분석 → 학년 선택 → 초록색 아닌 칸 선택 → 3배수 문제로 제작 후 프린트</div></div>
+        <div class="sys-step"><div class="sys-step-num">5</div><div>인쇄: 시험지 선택 → 아래 인쇄버튼 → [king_hc]의 iR-ADV 6465로 인쇄</div></div>
+        <div class="sys-step"><div class="sys-step-num">6</div><div>시험지가 안 보일 때: 수업준비 → 시험지 검색 → 시험지 선택 → 학생앱 공개</div></div>
+      </div>
+    </div>
+
+    <!-- 와이파이 -->
+    <div class="sys-card">
+      <div class="sys-card-head">
+        <span class="sys-name">📶 와이파이</span>
+      </div>
+      <div class="sys-card-body">
+        <div style="padding:10px 16px 4px;font-size:10px;font-weight:700;color:#999;letter-spacing:0.08em;">4관</div>
+        <div class="cred-row" style="padding-top:4px;">
+          <div class="cred-box"><div class="cl">이름</div><div class="cv">NK 2G</div></div>
+          <div class="cred-box"><div class="cl">비밀번호</div><div class="cv">NKNK1234@</div></div>
+        </div>
+        <div style="padding:10px 16px 4px;font-size:10px;font-weight:700;color:#999;letter-spacing:0.08em;">2관</div>
+        <div class="cred-row" style="border-bottom:none;padding-top:4px;">
+          <div class="cred-box"><div class="cl">이름</div><div class="cv">SK_WIFIGIGAEB68_5G</div></div>
+          <div class="cred-box"><div class="cl">비밀번호</div><div class="cv">EOE57@4237</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 클리닉 시트지 -->
+    <div class="sys-card">
+      <div class="sys-card-head">
+        <span class="sys-name">📋 클리닉 시트지</span>
+        <span class="sys-cred">팀장님께 공유 요청</span>
+      </div>
+      <div class="sys-card-body">
+        <div class="sys-step"><div class="sys-step-num">1</div><div>출석체크: 코칭 월수·화목·금·토 왔으면 출석, 없으면 무단 (가운데 두 칸은 건드릴 필요 없음)</div></div>
+        <div class="sys-step"><div class="sys-step-num">2</div><div>좌석 확인: 좌석 MW / TT / F / S 교시별로 확인</div></div>
+      </div>
+    </div>
+
+    <!-- 스터디카페 -->
+    <div class="sys-card">
+      <div class="sys-card-head">
+        <span class="sys-name">☕ 스터디카페</span>
+        <span class="sys-cred">엘베 사이 복도 · 빡공 스터디카페</span>
+      </div>
+      <div class="sys-card-body">
+        <div class="cred-row">
+          <div class="cred-box"><div class="cl">아이디</div><div class="cv">01089242889</div></div>
+          <div class="cred-box"><div class="cl">비밀번호</div><div class="cv">000000</div></div>
+        </div>
+        <div class="sys-step"><div class="sys-step-num">1</div><div>1회권 → 자유석 → 4시간 → 좌석 선택 → 종이+전자 영수증 발급 → 두 번째 영수증 QR 사용</div></div>
+        <div class="sys-step"><div class="sys-step-num">2</div><div>영수증이 안 나오거나 잔여 시간 없으면 팀장님께 보고</div></div>
+        <div class="sys-step"><div class="sys-step-num">3</div><div>외부인도 사용하는 공간이므로 최대한 조용히 진행, 학생들 엄격 통제 (CCTV 확인 가능)</div></div>
+        <div class="sys-step"><div class="sys-step-num">4</div><div>화장실 가는 학생은 QR 들려 보내기 (핸드폰은 자리에 두고 다녀오게 하기)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 담당자 연락처 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 담당자 연락처</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+
+      <div style="display:flex;gap:10px;align-items:center;padding:12px 14px;background:#f8f8f8;border-radius:8px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0;">4관</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:#111;">김형철 <span style="font-size:11px;font-weight:400;color:#999;">팀장</span></div>
+          <div style="font-size:12px;color:#555;font-family:monospace;margin-top:1px;">010-8924-2889</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;padding:12px 14px;background:#f8f8f8;border-radius:8px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0;">2관</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:#111;">김의준 <span style="font-size:11px;font-weight:400;color:#999;">팀장</span></div>
+          <div style="font-size:12px;color:#555;font-family:monospace;margin-top:1px;">010-5435-9796</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;padding:12px 14px;background:#f8f8f8;border-radius:8px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#444;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0;">4관</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:#111;">김수한 <span style="font-size:11px;font-weight:400;color:#999;">부장</span></div>
+          <div style="font-size:12px;color:#555;font-family:monospace;margin-top:1px;">010-4895-2596</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;padding:12px 14px;background:#111;border-radius:8px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#111;flex-shrink:0;">대표</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:#fff;">김기영 <span style="font-size:11px;font-weight:400;color:rgba(255,255,255,0.5);">대표</span></div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7);font-family:monospace;margin-top:1px;">010-4724-2316</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 테스트 지침 -->
+<div class="pg" id="m3">
+  <div class="sec-label">Test Guide</div>
+  <div class="sec-title">테스트 지침</div>
+  <div class="sec-sub">테스트 유형별 시간·커트라인·후속 조치 기준입니다.</div>
+
+  <!-- 일일 테스트 -->
+  <div class="test-card">
+    <div class="test-card-head" style="background:#1a3a6b;">
+      <div>
+        <div class="t-name">일일 테스트</div>
+        <div class="t-time">⏱ 20분</div>
+      </div>
+    </div>
+    <div class="test-card-body">
+      <div class="t-item">
+        <div class="t-dot" style="background:#1a3a6b;"></div>
+        <div>오답노트 <strong>오답유형</strong> 진행</div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot" style="background:#1a3a6b;"></div>
+        <div>
+          오답유형 <strong>100점 맞을 때까지</strong> 진행
+          <div class="t-note">기준 — 5문제 이하에서 1개라도 오답 시 전체 재진행<br>6문제 이상부터 틀린 문제만 재진행<br>예) 3문제 중 1개 오답 → 3문제 전체 / 5문제 중 1개 오답 → 1문제만</div>
+        </div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot" style="background:#1a3a6b;"></div>
+        <div><strong>오답노트 걷기</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 주간 테스트 -->
+  <div class="test-card">
+    <div class="test-card-head" style="background:#27ae60;">
+      <div>
+        <div class="t-name">주간 테스트</div>
+        <div class="t-time">⏱ 40분</div>
+      </div>
+    </div>
+    <div class="test-card-body">
+      <div class="t-item">
+        <div class="t-dot" style="background:#27ae60;"></div>
+        <div><strong>교재 검사</strong> 및 <strong>매쓰플랫 점검</strong> (시트지 메모 확인)</div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot" style="background:#27ae60;"></div>
+        <div>오답유형 <strong>100점 맞을 때까지</strong> 진행 (위 기준 동일 적용)</div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot" style="background:#27ae60;"></div>
+        <div>
+          <strong>금·토 수업</strong> 종 치기 전에 귀가 금지
+          <div class="t-warn">※ 수업 끝나기 전 일찍 보내지 않기</div>
+        </div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot" style="background:#27ae60;"></div>
+        <div>다 못한 인원 <strong>나머지 강의실(1강의실)로 이동</strong></div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot" style="background:#27ae60;"></div>
+        <div><strong>오답노트 걷기</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 월말 평가 -->
+  <div class="test-card">
+    <div class="test-card-head" style="background:#c0392b;">
+      <div>
+        <div class="t-name">월말 평가</div>
+        <div class="t-time">⏱ 50분</div>
+      </div>
+      <div class="t-cut">커트라인 70점</div>
+    </div>
+    <div class="test-card-body">
+      <div class="t-item">
+        <div class="t-dot" style="background:#c0392b;"></div>
+        <div>
+          <strong>엄격한 감독</strong>, 시험 종료 후 <strong>시험지 · 오답노트 · 오답유형 전부 수거</strong>
+          <div class="t-warn">스테이플러로 학생 것 찝어서 파일에 보관</div>
+        </div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot" style="background:#c0392b;"></div>
+        <div>
+          <strong>후속 조치</strong><br>
+          통과 → 오답첨삭 → 오답노트 → 오답유형<br>
+          미통과 → 오답첨삭만 진행
+        </div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot" style="background:#c0392b;"></div>
+        <div>
+          <strong>시험지 분실 시 CT 책임</strong>
+          <div class="t-warn">반드시 담당T에게 보고할 것</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 상벌점제 -->
+<div class="pg" id="m4">
+  <div class="sec-label">Point System</div>
+  <div class="sec-title">상벌점제</div>
+  <div class="sec-sub">공정하고 체계적인 팀 운영을 위한 상벌점 규정입니다.</div>
+
+  <!-- 벌점 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 벌점 규정</div>
+
+    <div class="item">
+      <div class="item-bar" style="background:#e74c3c;"></div>
+      <div class="item-num" style="color:#111;">01</div>
+      <div class="item-body">
+        <div class="item-title">정시 출근·퇴근 위반</div>
+        <div class="item-sub">지각 또는 조퇴 시 적용됩니다.</div>
+      </div>
+      <span class="item-tag red">-1점</span>
+    </div>
+
+    <div class="item">
+      <div class="item-bar" style="background:#e74c3c;"></div>
+      <div class="item-num" style="color:#111;">02</div>
+      <div class="item-body">
+        <div class="item-title">담당 학생 핸드폰 사용 적발</div>
+        <div class="item-sub">담당 학생이 핸드폰을 사용하다 적발된 경우 적용됩니다.</div>
+      </div>
+      <span class="item-tag red">-1점</span>
+    </div>
+
+    <div class="item">
+      <div class="item-bar" style="background:#e74c3c;"></div>
+      <div class="item-num" style="color:#111;">03</div>
+      <div class="item-body">
+        <div class="item-title">사유 불문 결근</div>
+        <div class="item-sub">어떠한 사유라도 결근 시 적용됩니다.</div>
+      </div>
+      <span class="item-tag red">-1점</span>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">누적</div>
+      <div class="item-body">
+        <div class="item-title">벌점 누적 시 페널티</div>
+        <div class="item-sub">
+          <span style="display:inline-flex;align-items:center;gap:6px;margin-right:12px;"><strong>-3점</strong> 도달 시 → 시급 -1,000원</span><br>
+          <span style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;"><strong>-5점</strong> 도달 시 → 시급 -2,000원</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar"></div>
+      <div class="item-num" style="color:#111;">↺</div>
+      <div class="item-body">
+        <div class="item-title">벌점 리셋</div>
+        <div class="item-sub">벌점은 <strong>매월 1일</strong>에 초기화됩니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 상점 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 상점 규정</div>
+
+    <div class="item">
+      <div class="item-bar" style="background:#27ae60;"></div>
+      <div class="item-num" style="color:#111;">01</div>
+      <div class="item-body">
+        <div class="item-title">학생·강사 칭찬 피드백 접수</div>
+      </div>
+      <span class="item-tag" style="background:#e8f5e9;color:#27ae60;">+1점</span>
+    </div>
+
+    <div class="item">
+      <div class="item-bar" style="background:#27ae60;"></div>
+      <div class="item-num" style="color:#111;">02</div>
+      <div class="item-body">
+        <div class="item-title">대표 칭찬 피드백 접수</div>
+      </div>
+      <span class="item-tag" style="background:#e8f5e9;color:#27ae60;">+3점</span>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">누적</div>
+      <div class="item-body">
+        <div class="item-title">상점 누적 인센티브</div>
+        <div class="item-sub"><strong>+5점</strong> 도달 시 → 시급 +1,000원</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar" style="background:#27ae60;"></div>
+      <div class="item-num" style="color:#111;">★</div>
+      <div class="item-body">
+        <div class="item-title">클리닉 제도 개선 제안 채택 시</div>
+        <div class="item-sub"><strong>10만원 즉시 지급</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 시급 규정 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 시급 규정</div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">01</div>
+      <div class="item-body">
+        <div class="item-title">정시 출근·퇴근 원칙</div>
+        <div class="item-sub">출퇴근 시간을 반드시 준수합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">02</div>
+      <div class="item-body">
+        <div class="item-title">추가 근무</div>
+        <div class="item-sub"><strong>30분 단위</strong>로만 가능하며, 반드시 <strong>팀장 허락</strong> 하에만 가능합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">03</div>
+      <div class="item-body">
+        <div class="item-title">시급 인상</div>
+        <div class="item-sub"><strong>만 3개월</strong> 근무 후 시급 인상이 검토됩니다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 행정 보고 -->
+<div class="pg" id="m5">
+  <div class="sec-label">Admin</div>
+  <div class="sec-title">행정 보고</div>
+  <div class="sec-sub">결근 보고 및 근무내역 제출 방법입니다.</div>
+
+  <!-- 결근 보고 양식 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 결근 보고 양식</div>
+    <div class="sys-card">
+      <div class="sys-card-head">
+        <span class="sys-name">📋 결근 보고</span>
+        <span class="sys-cred">클리닉 톡방에 카톡</span>
+      </div>
+      <div class="sys-card-body" style="padding:14px 16px;">
+        <pre style="font-size:12px;line-height:1.9;color:#333;font-family:monospace;background:#f8f8f8;border-radius:7px;padding:12px 14px;">[결근보고]
+이름 : 아무개
+날짜 : 8월 13일 (수)
+사유 : 학과 행사 준비 회의
+대타 : X
+패널티 : -1</pre>
+      </div>
+    </div>
+
+    <!-- 결근 패널티 -->
+    <div class="item">
+      <div class="item-bar" style="background:#e74c3c;"></div>
+      <div class="item-num">01</div>
+      <div class="item-body">
+        <div class="item-title">결근 시</div>
+        <div class="item-sub">사유에 관계없이 결근 시 적용됩니다.</div>
+      </div>
+      <span class="item-tag red">-1점</span>
+    </div>
+
+    <div class="item">
+      <div class="item-bar" style="background:#e74c3c;"></div>
+      <div class="item-num">02</div>
+      <div class="item-body">
+        <div class="item-title">대타 못 구한 경우 + 1주 이내 보고</div>
+        <div class="item-sub">대타를 구하지 못하고 결근 1주 이내에 보고한 경우 적용됩니다.</div>
+      </div>
+      <span class="item-tag red">-3점</span>
+    </div>
+  </div>
+
+  <!-- 근무내역 제출 -->
+  <div class="block">
+    <div class="block-title"><span class="dot"></span> 근무내역 제출</div>
+    <div class="sys-card">
+      <div class="sys-card-head">
+        <span class="sys-name">📱 근무내역 제출</span>
+        <span class="sys-cred">대표님께 카톡</span>
+      </div>
+      <div class="sys-card-body" style="padding:14px 16px;">
+        <div style="font-size:12px;color:#e74c3c;font-weight:700;margin-bottom:10px;">매일 퇴근 시 누적으로 보고 진행</div>
+        <pre style="font-size:12px;line-height:1.9;color:#333;font-family:monospace;background:#f8f8f8;border-radius:7px;padding:12px 14px;">[12월 근무내역: 입사일_24.12.04]
+12.24(화) 5:30~8:30 (3시간 00분)
+12.26(목) 5:30~10:00 (4시간 30분)
+
+총 근무시간: 12시간 20분
+주민등록번호:
+계좌번호:
+전화번호:</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 체크리스트 -->
+<div class="pg" id="m6">
+  <div class="sec-label">Checklist</div>
+  <div class="sec-title">체크리스트</div>
+  <div class="sec-sub">출근·퇴근 시 확인해야 할 업무 목록입니다.</div>
+
+  <!-- 출근 -->
+  <div class="block">
+    <div class="block-title" style="justify-content:space-between;">
+      <span style="display:flex;align-items:center;gap:7px;"><span class="dot" style="background:#27ae60;"></span> 출근 시</span>
+      <button class="rst" onclick="rst('cl-in')">↺ 초기화</button>
+    </div>
+    <div id="cl-in">
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span>수업 <strong>5~10분 전</strong> 출근</span></label>
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span>데스크에서 <strong>출결 버튼</strong> 누르기</span></label>
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span>담당반 <strong>시트지 메모</strong> 및 특이사항 확인</span></label>
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span>당일 클리닉 <strong>시험지</strong> 챙기기</span></label>
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span>개인 핸드폰 <strong>무음 처리</strong> 및 보관</span></label>
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span>학생 <strong>출석 체크</strong> 및 시험지 배부</span></label>
+    </div>
+  </div>
+
+  <!-- 퇴근 -->
+  <div class="block">
+    <div class="block-title" style="justify-content:space-between;">
+      <span style="display:flex;align-items:center;gap:7px;"><span class="dot" style="background:#e74c3c;"></span> 퇴근 전</span>
+      <button class="rst" onclick="rst('cl-out')">↺ 초기화</button>
+    </div>
+    <div id="cl-out">
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span>학생 <strong>설문지 작성</strong> 완료 여부 확인</span></label>
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span><strong>클리닉 보고서</strong> 작성 및 제출</span></label>
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span>강의실 <strong>정리정돈</strong></span></label>
+      <label class="cl-item"><input type="checkbox" onchange="ck(this)"><span>대표님께 <strong>시수 누적 보고</strong> 및 <strong>퇴근 버튼</strong> 누르기</span></label>
+    </div>
+  </div>
+</div>
+
+<div class="footer">© 2026 NK 클리닉 · 학습관리팀</div>
+
+<script>
+function ck(cb) { cb.closest('.cl-item').classList.toggle('done', cb.checked); }
+function rst(id) {
+  document.getElementById(id).querySelectorAll('.cl-item').forEach(c => {
+    c.classList.remove('done');
+    const cb = c.querySelector('input');
+    if (cb) cb.checked = false;
+  });
+}
+function sw(id, i) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.nb')[i].classList.add('on');
+}
+</script>
+</body>
+</html>
