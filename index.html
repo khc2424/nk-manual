@@ -64,6 +64,10 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
 .cred-box { background: #f8f8f8; border-radius: 6px; padding: 8px 12px; font-size: 11px; flex: 1; }
 .cred-box .cl { font-size: 10px; color: #999; margin-bottom: 3px; font-weight: 700; letter-spacing: 0.05em; }
 .cred-box .cv { font-size: 13px; font-weight: 800; color: #111; font-family: monospace; }
+.cred-box { position: relative; }
+.copy-btn { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; border: 1px solid #ddd; background: #fff; color: #888; cursor: pointer; transition: all 0.15s; }
+.copy-btn:hover { background: #111; color: #fff; border-color: #111; }
+.copy-btn.copied { background: #111; color: #fff; border-color: #111; }
 
 /* 테스트 카드 */
 .test-card { border-radius: 10px; margin-bottom: 20px; overflow: hidden; border: 1px solid #e8e8e8; }
@@ -190,6 +194,16 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
       <div class="item-body">
         <div class="item-title">단계적 힌트 제공</div>
         <div class="item-sub">질문하는 학생에게 바로 정답을 알려주지 말고 단계적으로 힌트를 제공합니다.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-bar hi"></div>
+      <div class="item-num hi">09</div>
+      <div class="item-body">
+        <div class="item-title">축제 기간 결근 금지</div>
+        <div class="item-sub">축제 기간은 클리닉 운영에 매우 중요한 시기로, <strong>원칙적으로 결근이 불가</strong>합니다. 부득이한 사정이 있는 경우 <strong>반드시 대타를 구한 후에만</strong> 가능합니다.</div>
+        <span class="item-tag red">대타 필수</span>
       </div>
     </div>
   </div>
@@ -379,12 +393,12 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
         <div style="padding:10px 16px 4px;font-size:10px;font-weight:700;color:#999;letter-spacing:0.08em;">4관</div>
         <div class="cred-row" style="padding-top:4px;">
           <div class="cred-box"><div class="cl">이름</div><div class="cv">NK 2G</div></div>
-          <div class="cred-box"><div class="cl">비밀번호</div><div class="cv">NKNK1234@</div></div>
+          <div class="cred-box"><div class="cl">비밀번호</div><div class="cv">NKNK1234@</div><button class="copy-btn" onclick="copyText('NKNK1234@', this)">복사</button></div>
         </div>
         <div style="padding:10px 16px 4px;font-size:10px;font-weight:700;color:#999;letter-spacing:0.08em;">2관</div>
         <div class="cred-row" style="border-bottom:none;padding-top:4px;">
           <div class="cred-box"><div class="cl">이름</div><div class="cv">SK_WIFIGIGAEB68_5G</div></div>
-          <div class="cred-box"><div class="cl">비밀번호</div><div class="cv">EOE57@4237</div></div>
+          <div class="cred-box"><div class="cl">비밀번호</div><div class="cv">EOE57@4237</div><button class="copy-btn" onclick="copyText('EOE57@4237', this)">복사</button></div>
         </div>
       </div>
     </div>
@@ -810,6 +824,13 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
 <div class="footer">© 2026 NK 클리닉 · 학습관리팀</div>
 
 <script>
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '완료';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 1500);
+  });
+}
 function ck(cb) { cb.closest('.cl-item').classList.toggle('done', cb.checked); }
 function rst(id) {
   document.getElementById(id).querySelectorAll('.cl-item').forEach(c => {
